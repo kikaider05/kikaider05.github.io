@@ -1,1 +1,1 @@
-# shibang.github.io
+# FFXIV toy project

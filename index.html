@@ -8,15 +8,67 @@
 	<meta name="author" content="FanaleFantasia">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 	<script src="site.js"></script>
-	<script type="text/javascript">
-		$.get( "https://xivapi.com/freecompany/9231253336202687179?data=FCM", function( data ) {
-		  console.log(data);
-		});
-	</script>
+
 </head>
 
 <body>
+	<div id="guild-section"></div>
 
+	<script id="guild-template" type="text/x-handlebars-template">
+		<div class="card">
+			<div class="card-header">
+			  {{Guild-Header}}
+			</div>
+			<div class="card-body">
+				<div class="accordion" id="character-accordion">
+
+				</div>
+			</div>
+		  </div>
+	</script>
+
+	<script id="character-template" type="text/x-handlebars-template">
+		<div class="card">
+			<div class="card-header" id="headingOne">
+				<h5 class="mb-0">
+				<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{Character-ID}}" aria-expanded="true" aria-controls="collapse-{{Character-ID}}">
+					<img src="{{Character-Avatar}}" width="50" height="50" /> {{Character-Name}}
+				</button>
+				</h5>
+			</div>
+		
+			<div id="collapse-{{Character-ID}}" class="collapse" aria-labelledby="headingOne" data-parent="#character-accordion" data-id={{Character-ID}}>
+				<div class="card-body">
+					
+				</div>
+			</div>
+		</div>
+	</script>
+
+	<script id="character-info-template" type="text/x-handlebars-template">
+		<ul class="list-group">
+			{{#each this}}
+			<li class="list-group-item">
+				<div class="row">
+					<div class="col-sm-1">
+						<img src="{{Icon}}" width="25" height="25" title="{{Name}}" />
+					</div>
+					<div class="col-sm-10">
+						<div class="progress">
+							<div class="progress-bar" role="progressbar" style="width: {{Width}}%" aria-valuenow="{{ExpLevel}}" aria-valuemin="0" aria-valuemax="{{ExpLevelMax}}">{{ExpLevel}}</div>
+						</div>
+					</div>
+					<div class="col-sm-1">
+						{{Level}}
+					</div>
+				</div>
+			</li>
+			{{/each}}
+		</ul>
+	</script>
 </body>
 </html>

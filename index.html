@@ -50,25 +50,40 @@
 	</script>
 
 	<script id="character-info-template" type="text/x-handlebars-template">
-		<ul class="list-group">
-			{{#each this}}
-			<li class="list-group-item">
-				<div class="row">
-					<div class="col-sm-1">
-						<img src="{{Icon}}" width="25" height="25" title="{{Name}}" />
-					</div>
-					<div class="col-sm-10">
-						<div class="progress">
-							<div class="progress-bar" role="progressbar" style="width: {{Width}}%" aria-valuenow="{{ExpLevel}}" aria-valuemin="0" aria-valuemax="{{ExpLevelMax}}">{{ExpLevel}}</div>
-						</div>
-					</div>
-					<div class="col-sm-1">
-						{{Level}}
-					</div>
+			<div class="row">
+				<div class="col-xl-2">
+					<table class="table table-striped">
+						<tr>
+							<td style="text-align: right">Race:</td>
+							<td>{{Race}}</td>
+						</tr>
+						<tr>
+							<td style="text-align: right">Tribe:</td>
+							<td>{{Tribe}}</td>
+						</tr>
+						<tr>
+							<td style="text-align: right">Grand Company:</td>
+							<td>{{GrandCompany}}</td>
+						</tr>
+					</table>
 				</div>
-			</li>
-			{{/each}}
-		</ul>
+				<div class="col-xl-10">
+					<table class="table">
+						{{#each this.ClassJobs}}
+						<tr>
+							<td style="width: 2%;"><img src="{{Icon}}" width="25" height="25" title="{{Name}}" /></td>
+							<td style="width: 96%;">
+								<div style="margin-top: 5px;" class="progress">
+									<div class="progress-bar" role="progressbar" style="width: {{Width}}%" aria-valuenow="{{ExpLevel}}" aria-valuemin="0" aria-valuemax="{{ExpLevelMax}}">{{ExpLevel}}</div>
+								</div>
+							</td style="width: 2%;">
+							<td>{{Level}}</td>
+						</tr>
+						{{/each}}
+					</table>
+				</div>
+			</div>
+
 	</script>
 </body>
 </html>

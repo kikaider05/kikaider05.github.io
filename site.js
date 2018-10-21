@@ -44,7 +44,7 @@ $(document).ready(function() {
 
 
 	$.get("https://xivapi.com/freecompany/9230971861226067551?data=FCM", function( data ) {
-		var guildTemplateData = { "Guild-Header": data.FreeCompany.Name };
+		var guildTemplateData = { "Guild-Header": data.FreeCompany.Name, "Guild-Members-Count": data.FreeCompany.ActiveMemberCount, "Guild-Slogan": data.FreeCompany.Slogan };
 		$('#guild-section').html(guildTemplate(guildTemplateData));
 		$.each(data.FreeCompanyMembers, function(i, key) {
 			var characterTemplateData = { "Character-Avatar": key.Avatar, "Character-Name": key.Name, "Character-ID":  key.ID};

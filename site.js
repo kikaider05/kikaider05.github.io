@@ -25,11 +25,13 @@ $(document).ready(function() {
 	});
 
 	$('#guild-section').on('show.bs.collapse', function (i, e) {
-		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID', function(data) {
+		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.GearSet.Attributes,Character.ActiveClassJob.JobID', function(data) {
 			var characterInfoTemplateData = { 
-				"ClassJobs": [], 
+				"ClassJobs": [],
+				"CurrentClass": { "Icon": classes[data.Character.ActiveClassJob.JobID].Icon, "Name": classes[data.Character.ActiveClassJob.JobID].Name, "Attributes": [] },
 				"Tribe": tribes[data.Character.Tribe], 
-				"Race": races[data.Character.Race], 
+				"Race": races[data.Character.Race],
+				"Gender": gender[data.Character.Gender],
 				"GrandCompany": grandCompanies[data.Character.GrandCompany.NameID]
 			};
 			var jobs = {"d": [], "c": [], "t": [], "h": [], "g": []};
@@ -56,6 +58,11 @@ $(document).ready(function() {
 			$.each(jobs.g, function(i, key) {
 				characterInfoTemplateData.ClassJobs.push(key);
 			});
+			console.log(data.Character);
+			$.each(data.Character.GearSet.Attributes, function(i, key) {
+				characterInfoTemplateData.CurrentClass.Attributes.push({ "Name": attributes[i], "Value": key });
+			})
+
 			$(i.target).html(characterInfoTemplate(characterInfoTemplateData));
 		});
 	});
@@ -103,6 +110,10 @@ $(document).ready(function() {
 	grandCompanies[2] = "Order of the Twin Adder";
 	grandCompanies[3] = "Immortal Flames";
 
+	var gender = {};
+	gender[1] = "Male";
+	gender[2] = "Female";
+
 	var races = {};
 	races[1] = "Hyur";
 	races[2] = "Elezen";
@@ -125,4 +136,78 @@ $(document).ready(function() {
 	tribes[11] = "Raen";
 	tribes[12] = "Xaela";
 
+	var attributes = {};
+	attributes[1] = "Strength"
+	attributes[2] = "Dexterity"
+	attributes[3] = "Vitality"
+	attributes[4] = "Intelligence"
+	attributes[5] = "Mind"
+	attributes[6] = "Piety"
+	attributes[7] = "HP"
+	attributes[8] = "MP"
+	attributes[9] = "TP"
+	attributes[10] = "GP"
+	attributes[11] = "CP"
+	attributes[12] = "Physical Damage"
+	attributes[13] = "Magic Damage"
+	attributes[14] = "Delay"
+	attributes[15] = "Additional Effect: "
+	attributes[16] = "Attack Speed"
+	attributes[17] = "Block Rate"
+	attributes[18] = "Block Strength"
+	attributes[19] = "Tenacity"
+	attributes[20] = "Attack Power"
+	attributes[21] = "Defense"
+	attributes[22] = "Direct Hit Rate"
+	attributes[23] = "Evasion"
+	attributes[24] = "Magic Defense"
+	attributes[25] = "Critical Hit Power"
+	attributes[26] = "Critical Hit Resilience"
+	attributes[27] = "Critical Hit"
+	attributes[28] = "Critical Hit Evasion"
+	attributes[29] = "Slashing Resistance"
+	attributes[30] = "Piercing Resistance"
+	attributes[31] = "Blunt Resistance"
+	attributes[32] = "Projectile Resistance"
+	attributes[33] = "Attack Magic Potency"
+	attributes[34] = "Healing Magic Potency"
+	attributes[35] = "Enhancement Magic Potency"
+	attributes[36] = "Enfeebling Magic Potency"
+	attributes[37] = "Fire Resistance"
+	attributes[38] = "Ice Resistance"
+	attributes[39] = "Wind Resistance"
+	attributes[40] = "Earth Resistance"
+	attributes[41] = "Lightning Resistance"
+	attributes[42] = "Water Resistance"
+	attributes[43] = "Magic Resistance"
+	attributes[44] = "Determination"
+	attributes[45] = "Skill Speed"
+	attributes[46] = "Spell Speed"
+	attributes[47] = "Haste"
+	attributes[48] = "Morale"
+	attributes[49] = "Enmity"
+	attributes[50] = "Enmity Reduction"
+	attributes[51] = "Careful Desynthesis"
+	attributes[52] = "EXP Bonus"
+	attributes[53] = "Regen"
+	attributes[54] = "Refresh"
+	attributes[55] = "Movement Speed"
+	attributes[56] = "Spikes"
+	attributes[57] = "Slow Resistance"
+	attributes[58] = "Petrification Resistance"
+	attributes[59] = "Paralysis Resistance"
+	attributes[60] = "Silence Resistance"
+	attributes[61] = "Blind Resistance"
+	attributes[62] = "Poison Resistance"
+	attributes[63] = "Stun Resistance"
+	attributes[64] = "Sleep Resistance"
+	attributes[65] = "Bind Resistance"
+	attributes[66] = "Heavy Resistance"
+	attributes[67] = "Doom Resistance"
+	attributes[68] = "Reduced Durability Loss"
+	attributes[69] = "Increased Spiritbond Gain"
+	attributes[70] = "Craftsmanship"
+	attributes[71] = "Control"
+	attributes[72] = "Gathering"
+	attributes[73] = "Perception"
 })

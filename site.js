@@ -13,7 +13,7 @@ $(document).ready(function() {
 			"Guild-Slogan": data.FreeCompany.Slogan
 		};
 		$('#guild-section').html(guildTemplate(guildTemplateData));
-		$.each(data.FreeCompanyMembers, function(i, key) {
+		$.each(data.FreeCompanyMembers.data, function(i, key) {
 			var characterTemplateData = { 
 				"Character-Avatar": key.Avatar, 
 				"Character-Name": key.Name, 

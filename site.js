@@ -52,6 +52,8 @@ function loadPage() {
 				"ClassJobs": [],
 				"Minions": [],
 				"Mounts": [],
+				"MountCount": data.Character.Mounts.length.toString() + "/" + Object.keys(ffxivData["Mount"]).length.toString(),
+				"MinionCount": data.Character.Minions.length.toString() + "/" + Object.keys(ffxivData["Companion"]).length.toString(),
 				"Tribe": tribes[data.Character.Tribe], 
 				"Race": races[data.Character.Race],
 				"Gender": gender[data.Character.Gender],

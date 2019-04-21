@@ -54,19 +54,6 @@
 		</ul>
 	</script>
 
-	<script id="guild-template" type="text/x-handlebars-template">
-		<div class="card">
-			<div class="card-header bg-primary">
-			  {{Guild-Header}} - {{Guild-Members-Count}} Members - {{Guild-Slogan}}
-			</div>
-			<div class="card-body">
-				<div class="accordion" id="character-accordion">
-
-				</div>
-			</div>
-		  </div>
-	</script>
-
 	<script id="character-jobs-template" type="text/x-handlebars-template">
 		<div class="card" style="color: #000">
 			<div class="card-header bg-primary">
@@ -105,7 +92,7 @@
 			<div class="card-body">
 				<div class="row">
 					<div class="col-xl-6">
-						Mount
+						Mount <span style="float: right">{{OwnedMountCount}}/{{MountCount}}</span>
 						<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
 							{{#each this.Mounts}}
 							<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}">
@@ -117,7 +104,7 @@
 						</ul>
 					</div>
 					<div class="col-xl-6">
-						Minion
+						Minion <span style="float: right">{{OwnedMinionCount}}/{{MinionCount}}</span>
 						<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
 							{{#each this.Minions}}
 							<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}">
@@ -128,42 +115,6 @@
 							{{/each}}
 						</ul>
 					</div>
-				</div>
-			</div>
-		</div>
-	</script>
-
-	<script id="character-template" type="text/x-handlebars-template">
-		<div class="card">
-			<div class="card-header" id="headingOne" style="padding-top: 0px; padding-bottom: 0px;">
-				<div class="row">
-					<div class="col-sm-6">
-						<h5 class="mb-0">
-							<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{Character-ID}}" aria-expanded="true" aria-controls="collapse-{{Character-ID}}" style="text-decoration: none; color: white">
-								<img src="{{Character-Avatar}}" width="50" height="50" />&nbsp;&nbsp;&nbsp;{{Character-Name}}
-							</button>
-						</h5>
-					</div>
-					<div class="col-sm-6" style="font-style: italic; text-align: right;">
-						{{Character-Guild-Rank}}
-					</div>
-				</div>
-
-			</div>
-		
-			<div id="collapse-{{Character-ID}}" class="collapse" aria-labelledby="headingOne" data-parent="#character-accordion" data-id={{Character-ID}}>
-				<div class="card-body">
-					
-				</div>
-			</div>
-		</div>
-	</script>
-
-	<script id="no-character-info-template" type="text/x-handlebars-template">
-		<div class="row">
-			<div class="col-xl-12">
-				<div class="alert alert-warning" role="alert" style="margin-bottom: 0px">
-					Character info not currently available. Please check later.
 				</div>
 			</div>
 		</div>

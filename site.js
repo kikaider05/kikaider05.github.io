@@ -20,8 +20,6 @@ $(document).ready(function() {
 })
 
 function loadPage() {
-	var guildTemplateSource = document.getElementById("guild-template").innerHTML;
-	var guildTemplate = Handlebars.compile(guildTemplateSource);
 	var navTemplateSource = document.getElementById("nav-template").innerHTML;
 	var navTemplate = Handlebars.compile(navTemplateSource);
 	var memberTemplateSource = document.getElementById("member-template").innerHTML;
@@ -30,20 +28,8 @@ function loadPage() {
 	var characterJobsTemplate = Handlebars.compile(characterJobsTemplateSource);
 	var characterCollectibleTemplateSource = document.getElementById("character-collectible-template").innerHTML;
 	var characterCollectibleTemplate = Handlebars.compile(characterCollectibleTemplateSource);
-	var characterTemplateSource = document.getElementById("character-template").innerHTML;
-	var characterTemplate = Handlebars.compile(characterTemplateSource);
-	var characterInfoTemplateSource = document.getElementById("character-info-template").innerHTML;
-	var characterInfoTemplate = Handlebars.compile(characterInfoTemplateSource);
-	var noCharacterInfoTemplateSource = document.getElementById("no-character-info-template").innerHTML;
-	var noCharacterInfoTemplate = Handlebars.compile(noCharacterInfoTemplateSource);
 
 	$.get("https://xivapi.com/freecompany/9230971861226067551?data=FCM", function( data ) {
-		var guildTemplateData = { 
-			"Guild-Header": data.FreeCompany.Name, 
-			"Guild-Members-Count": data.FreeCompany.ActiveMemberCount, 
-			"Guild-Slogan": data.FreeCompany.Slogan
-		};
-		$('#guild-section').html(guildTemplate(guildTemplateData));
 		$('#nav-section').html(navTemplate(data.FreeCompany));
 		var memberTemplateData = {
 			"Members": data.FreeCompanyMembers.data
@@ -61,23 +47,11 @@ function loadPage() {
 	});
 
 	$('body').on('click', '.member-item', function (i, e) {
-		console.log("arrived");
 		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
 			if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
 				$(i.target).html(noCharacterInfoTemplate());
 			} else {
 				//Jobs
-				var characterInfoTemplateData = { 
-					"ClassJobs": [],
-					"Minions": [],
-					"Mounts": [],
-					"MountCount": data.Character.Mounts.length.toString() + "/" + Object.keys(ffxivData["Mount"]).length.toString(),
-					"MinionCount": data.Character.Minions.length.toString() + "/" + Object.keys(ffxivData["Companion"]).length.toString(),
-					"Tribe": tribes[data.Character.Tribe], 
-					"Race": races[data.Character.Race],
-					"Gender": gender[data.Character.Gender],
-					"GrandCompany": grandCompanies[data.Character.GrandCompany.NameID]
-				};
 				var jobs = {"Damage": [], "Hand": [], "Tank": [], "Healer": []};
 				for (var classJob in data.Character.ClassJobs) {
 					var key = data.Character.ClassJobs[classJob];
@@ -97,8 +71,12 @@ function loadPage() {
 				}
 				$('#jobs-section').html(characterJobsTemplate(characterJobsTemplateData));
 
-				characterCollectibleTemplateData = { 
+				characterCollectibleTemplateData = {
+					OwnedMountCount: data.Character.Mounts.length,
+					MountCount: Object.keys(ffxivData["Mount"]).length,
 					Mounts: [],
+					OwnedMinionCount: data.Character.Minions.length,
+					MinionCount: Object.keys(ffxivData["Companion"]).length,
 					Minions: []
 				}
 				//Mounts
@@ -129,9 +107,7 @@ function loadPage() {
 						characterCollectibleTemplateData.Minions.push(key)
 					}
 				});
-
 				$('#collectible-section').html(characterCollectibleTemplate(characterCollectibleTemplateData))
-				//$(i.target).html(characterInfoTemplate(characterInfoTemplateData));
 			}
 		});
 	});

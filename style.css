@@ -1,0 +1,87 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+.nopad { padding-left: 0px; padding-right: 0px; }
+body { font-family: 'Poppins', sans-serif; }
+
+.wrapper {
+    margin-top: 35px;
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #2196F3;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #2196F3
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #fff;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    height: 38px;
+}
+.form-control:focus {
+    background-color: #fff;
+}
+
+.member-item {
+    font-size: .9rem;
+    cursor: pointer;
+    border-bottom: 1px;
+    border-color: #fff !important;
+}
+
+#jobs-section, #collectible-section {
+    margin-left: .3rem;
+    margin-top: .3rem;
+    width: 100%;
+    color: white;
+}
+
+.card-header {
+    color: #fff;
+}
+
+.row {
+    margin-right:0px;
+}
+
+.collectible-item a {
+    color: #000;
+}
+
+.collectible-item.bg-success a {
+    color: #fff;
+}

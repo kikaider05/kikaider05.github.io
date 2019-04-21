@@ -6,23 +6,57 @@
 	<title>Finale Fantasia</title>
 	<meta name="description" content="Finale Fantasia">
 	<meta name="author" content="FanaleFantasia">
-	<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/superhero/bootstrap.min.css" rel="stylesheet" integrity="sha384-u4BOm6DXWNW9DDMz3uKYKOOtsYm6pt8m8DxK2sVQ9RJVnWP8mjOIct/zzXkwobmN" crossorigin="anonymous">
+	<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/materia/bootstrap.min.css" rel="stylesheet" integrity="sha384-SYbiks6VdZNAKT8DNoXQZwXAiuUo5/quw6nMKtFlGO/4WwxW86BSTMtgdzzB9JJl" crossorigin="anonymous">
+	<link rel="stylesheet" href="style.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 	<script src="site.js"></script>
-	<style>
-		.nopad { padding-left: 0px; padding-right: 0px; }
-	</style>
 </head>
 
 <body>
-	<div id="guild-section"></div>
+	<div class="navbar fixed-top bg-primary"  style="color:white;padding:.5rem">
+		<div id="nav-section"></div>
+	</div>	
+	<div class="wrapper">	
+		<nav id="sidebar">
+			<div style="padding-left:.2rem;text-align:right">
+				<input type="text" class="form-control" placeholder="Enter name" />
+			</div>
+			<div id="member-section"></div>
+		</nav>
+		<div style="width:100%">
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="jobs-section"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="collectible-section"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script id="nav-template" type="text/x-handlebars-template">
+		{{Name}} - {{ActiveMemberCount}} Members - {{Slogan}}
+	</script>
+
+	<script id="member-template" type="text/x-handlebars-template">
+		<ul class="list-group list-group-flush">
+			{{#each this.Members}}
+			<li class="list-group-item member-item active" data-id={{ID}}><img src="{{Avatar}}" width="25" height="25" />&nbsp;&nbsp;&nbsp;{{Name}}</li>
+			{{/each}}
+		</ul>
+	</script>
 
 	<script id="guild-template" type="text/x-handlebars-template">
 		<div class="card">
-			<div class="card-header">
+			<div class="card-header bg-primary">
 			  {{Guild-Header}} - {{Guild-Members-Count}} Members - {{Guild-Slogan}}
 			</div>
 			<div class="card-body">
@@ -31,6 +65,72 @@
 				</div>
 			</div>
 		  </div>
+	</script>
+
+	<script id="character-jobs-template" type="text/x-handlebars-template">
+		<div class="card" style="color: #000">
+			<div class="card-header bg-primary">
+				Jobs
+			</div>
+			<div class="card-body">
+				<div class="row">
+					{{#each this.ClassTypes}}
+					<div class="col-sm-3">
+						{{Name}}
+						<table>
+							{{#each Classes}}
+							<tr>
+								<td style="width: 2%;"><img src="{{Icon}}" width="25" height="25" title="{{Name}}" /></td>
+								<td style="width: 96%;">
+									<div style="margin-top: 5px;" class="progress">
+										<div class="progress-bar" role="progressbar" style="width: {{Width}}%" aria-valuenow="{{ExpLevel}}" aria-valuemin="0" aria-valuemax="{{ExpLevelMax}}"></div>
+									</div>
+								</td style="width: 2%;">
+								<td>{{Level}}</td>
+							</tr>
+							{{/each}}
+						</table>
+					</div>
+					{{/each}}
+				</div>
+			</div>
+		</div>
+	</script>
+
+	<script id="character-collectible-template" type="text/x-handlebars-template">
+		<div class="card" style="color: #000">
+			<div class="card-header bg-primary">
+				Collectibles
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-xl-6">
+						Mount
+						<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
+							{{#each this.Mounts}}
+							<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}">
+								<a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv+mount" style="text-decoration: none" target="_blank">
+									<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}}
+								</a>
+							</li>
+							{{/each}}
+						</ul>
+					</div>
+					<div class="col-xl-6">
+						Minion
+						<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
+							{{#each this.Minions}}
+							<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}">
+								<a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv" style="text-decoration: none" target="_blank">
+									<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}}
+								</a>
+							</li>
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
 	</script>
 
 	<script id="character-template" type="text/x-handlebars-template">

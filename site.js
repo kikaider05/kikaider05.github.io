@@ -20,12 +20,14 @@ $(document).ready(function() {
 })
 
 function loadPage() {
-	var guildTemplateSource   = document.getElementById("guild-template").innerHTML;
+	var guildTemplateSource = document.getElementById("guild-template").innerHTML;
 	var guildTemplate = Handlebars.compile(guildTemplateSource);
-	var characterTemplateSource   = document.getElementById("character-template").innerHTML;
+	var characterTemplateSource = document.getElementById("character-template").innerHTML;
 	var characterTemplate = Handlebars.compile(characterTemplateSource);
-	var characterInfoTemplateSource   = document.getElementById("character-info-template").innerHTML;
+	var characterInfoTemplateSource = document.getElementById("character-info-template").innerHTML;
 	var characterInfoTemplate = Handlebars.compile(characterInfoTemplateSource);
+	var noCharacterInfoTemplateSource = document.getElementById("no-character-info-template").innerHTML;
+	var noCharacterInfoTemplate = Handlebars.compile(noCharacterInfoTemplateSource);
 
 	$.get("https://xivapi.com/freecompany/9230971861226067551?data=FCM", function( data ) {
 		var guildTemplateData = { 
@@ -46,73 +48,77 @@ function loadPage() {
 	});
 
 	$('#guild-section').on('show.bs.collapse', function (i, e) {
-		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts', function(data) {
-			//Jobs
-			var characterInfoTemplateData = { 
-				"ClassJobs": [],
-				"Minions": [],
-				"Mounts": [],
-				"MountCount": data.Character.Mounts.length.toString() + "/" + Object.keys(ffxivData["Mount"]).length.toString(),
-				"MinionCount": data.Character.Minions.length.toString() + "/" + Object.keys(ffxivData["Companion"]).length.toString(),
-				"Tribe": tribes[data.Character.Tribe], 
-				"Race": races[data.Character.Race],
-				"Gender": gender[data.Character.Gender],
-				"GrandCompany": grandCompanies[data.Character.GrandCompany.NameID]
-			};
-			var jobs = {"d": [], "c": [], "t": [], "h": [], "g": []};
-			for (var classJob in data.Character.ClassJobs) {
-				var key = data.Character.ClassJobs[classJob];
-				var currentClass = classes[key.JobID];
-				if (key.Level == 70) {
-					jobs[currentClass.Type].push({ "Icon": currentClass.Icon, "ExpLevel": "", "ExpLevelMax": 100, "Level": key.Level, "Name": currentClass.Name, "Width": 100 });
-				} else if (key.Level != 0) {
-					jobs[currentClass.Type].push({ "Icon": currentClass.Icon, "ExpLevel": key.ExpLevel, "ExpLevelMax": key.ExpLevelMax, "Level": key.Level, "Name": currentClass.Name, "Width": key.ExpLevel / key.ExpLevelMax * 100 });
-				}
-			};
-			$.each(jobs.t, function(i, key) {
-				characterInfoTemplateData.ClassJobs.push(key);
-			});
-			$.each(jobs.h, function(i, key) {
-				characterInfoTemplateData.ClassJobs.push(key);
-			});
-			$.each(jobs.d, function(i, key) {
-				characterInfoTemplateData.ClassJobs.push(key);
-			});
-			$.each(jobs.c, function(i, key) {
-				characterInfoTemplateData.ClassJobs.push(key);
-			});
-			$.each(jobs.g, function(i, key) {
-				characterInfoTemplateData.ClassJobs.push(key);
-			});
-			//Mounts
-			var ownedMounts = {};
-			$.each(data.Character.Mounts, function(i, key) {
-				ownedMounts[key] = {};
-				var mount = ffxivData["Mount"][key];
-				mount.Owned = true;
-				characterInfoTemplateData.Mounts.push(ffxivData["Mount"][key])
-			});
-			$.each(ffxivData["Mount"], function (i, key) {
-				if (!(key.ID in ownedMounts)) {
-					key.Owned = false
-					characterInfoTemplateData.Mounts.push(key)
-				}
-			});
-			//Minions
-			var ownedMinions = {};
-			$.each(data.Character.Minions, function(i, key) {
-				ownedMinions[key] = {};
-				var minion = ffxivData["Companion"][key];
-				minion.Owned = true;
-				characterInfoTemplateData.Minions.push(ffxivData["Companion"][key])
-			});
-			$.each(ffxivData["Companion"], function (i, key) {
-				if (!(key.ID in ownedMinions)) {
-					key.Owned = false;
-					characterInfoTemplateData.Minions.push(key)
-				}
-			});
-			$(i.target).html(characterInfoTemplate(characterInfoTemplateData));
+		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
+			if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
+				$(i.target).html(noCharacterInfoTemplate());
+			} else {
+				//Jobs
+				var characterInfoTemplateData = { 
+					"ClassJobs": [],
+					"Minions": [],
+					"Mounts": [],
+					"MountCount": data.Character.Mounts.length.toString() + "/" + Object.keys(ffxivData["Mount"]).length.toString(),
+					"MinionCount": data.Character.Minions.length.toString() + "/" + Object.keys(ffxivData["Companion"]).length.toString(),
+					"Tribe": tribes[data.Character.Tribe], 
+					"Race": races[data.Character.Race],
+					"Gender": gender[data.Character.Gender],
+					"GrandCompany": grandCompanies[data.Character.GrandCompany.NameID]
+				};
+				var jobs = {"d": [], "c": [], "t": [], "h": [], "g": []};
+				for (var classJob in data.Character.ClassJobs) {
+					var key = data.Character.ClassJobs[classJob];
+					var currentClass = classes[key.JobID];
+					if (key.Level == 70) {
+						jobs[currentClass.Type].push({ "Icon": currentClass.Icon, "ExpLevel": "", "ExpLevelMax": 100, "Level": key.Level, "Name": currentClass.Name, "Width": 100 });
+					} else if (key.Level != 0) {
+						jobs[currentClass.Type].push({ "Icon": currentClass.Icon, "ExpLevel": key.ExpLevel, "ExpLevelMax": key.ExpLevelMax, "Level": key.Level, "Name": currentClass.Name, "Width": key.ExpLevel / key.ExpLevelMax * 100 });
+					}
+				};
+				$.each(jobs.t, function(i, key) {
+					characterInfoTemplateData.ClassJobs.push(key);
+				});
+				$.each(jobs.h, function(i, key) {
+					characterInfoTemplateData.ClassJobs.push(key);
+				});
+				$.each(jobs.d, function(i, key) {
+					characterInfoTemplateData.ClassJobs.push(key);
+				});
+				$.each(jobs.c, function(i, key) {
+					characterInfoTemplateData.ClassJobs.push(key);
+				});
+				$.each(jobs.g, function(i, key) {
+					characterInfoTemplateData.ClassJobs.push(key);
+				});
+				//Mounts
+				var ownedMounts = {};
+				$.each(data.Character.Mounts, function(i, key) {
+					ownedMounts[key] = {};
+					var mount = ffxivData["Mount"][key];
+					mount.Owned = true;
+					characterInfoTemplateData.Mounts.push(ffxivData["Mount"][key])
+				});
+				$.each(ffxivData["Mount"], function (i, key) {
+					if (!(key.ID in ownedMounts)) {
+						key.Owned = false
+						characterInfoTemplateData.Mounts.push(key)
+					}
+				});
+				//Minions
+				var ownedMinions = {};
+				$.each(data.Character.Minions, function(i, key) {
+					ownedMinions[key] = {};
+					var minion = ffxivData["Companion"][key];
+					minion.Owned = true;
+					characterInfoTemplateData.Minions.push(ffxivData["Companion"][key])
+				});
+				$.each(ffxivData["Companion"], function (i, key) {
+					if (!(key.ID in ownedMinions)) {
+						key.Owned = false;
+						characterInfoTemplateData.Minions.push(key)
+					}
+				});
+				$(i.target).html(characterInfoTemplate(characterInfoTemplateData));
+			}
 		});
 	});
 }

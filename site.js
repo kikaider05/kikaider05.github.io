@@ -35,15 +35,6 @@ function loadPage() {
 			"Members": data.FreeCompanyMembers.data
 		};
 		$('#member-section').html(memberTemplate(memberTemplateData));
-		$.each(data.FreeCompanyMembers.data, function(i, key) {
-			var characterTemplateData = { 
-				"Character-Avatar": key.Avatar, 
-				"Character-Name": key.Name, 
-				"Character-ID":  key.ID,
-				"Character-Guild-Rank": key.Rank
-			};
-			$('#character-accordion').append(characterTemplate(characterTemplateData));
-		});
 	});
 
 	$('body').on('click', '.member-item', function (i, e) {
@@ -109,6 +100,12 @@ function loadPage() {
 				});
 				$('#collectible-section').html(characterCollectibleTemplate(characterCollectibleTemplateData))
 			}
+
+			window.scroll({
+				top: 0, 
+				left: 0, 
+				behavior: 'smooth' 
+			});
 		});
 	});
 }

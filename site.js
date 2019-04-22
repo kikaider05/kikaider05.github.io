@@ -19,6 +19,14 @@ $(document).ready(function() {
 	}
 })
 
+$(document).on('keyup', '#member-search', function() {
+	var $noMatches = $('#member-section').find('li').filter(function(i, key) {
+		return $(this).data('name').toLowerCase().indexOf($('#member-search').val().toLowerCase()) == -1;
+	});
+	$noMatches.hide();
+	$('#member-section').find('li').not($noMatches).show();
+});
+
 function loadPage() {
 	var navTemplateSource = document.getElementById("nav-template").innerHTML;
 	var navTemplate = Handlebars.compile(navTemplateSource);
@@ -101,11 +109,7 @@ function loadPage() {
 				$('#collectible-section').html(characterCollectibleTemplate(characterCollectibleTemplateData))
 			}
 
-			window.scroll({
-				top: 0, 
-				left: 0, 
-				behavior: 'smooth' 
-			});
+			window.scroll({top: 0, left: 0, behavior: 'smooth' });
 		});
 	});
 }

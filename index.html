@@ -24,7 +24,7 @@
 	<div class="wrapper">	
 		<nav id="sidebar">
 			<div style="padding-left:.2rem;text-align:right">
-				<input type="text" class="form-control" placeholder="Enter name" />
+				<input type="text" id="member-search" class="form-control" placeholder="Enter name" />
 			</div>
 			<div id="member-section"></div>
 		</nav>
@@ -49,7 +49,7 @@
 	<script id="member-template" type="text/x-handlebars-template">
 		<ul class="list-group list-group-flush">
 			{{#each this.Members}}
-			<li class="list-group-item member-item active" data-id={{ID}}><img src="{{Avatar}}" width="25" height="25" />&nbsp;&nbsp;&nbsp;{{Name}}</li>
+			<li class="list-group-item member-item active" data-id={{ID}} data-name="{{Name}}"><img src="{{Avatar}}" width="25" height="25" />&nbsp;&nbsp;&nbsp;{{Name}}</li>
 			{{/each}}
 		</ul>
 	</script>

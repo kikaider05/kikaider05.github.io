@@ -23,11 +23,17 @@
 	</div>	
 	<div class="wrapper">	
 		<nav id="sidebar">
-			<div style="padding-left:.2rem;text-align:right">
-				<input type="text" id="member-search" class="form-control" placeholder="Enter name" />
-			</div>
 			<div id="member-section"></div>
 		</nav>
+		<div style="width:100%" class="intro-section">
+			<div class="row">
+				<div class="col-xl-6 offset-xl-8">
+					<div class="alert alert-primary intro-alert" role="alert">
+						Select a member on the left menu to begin!
+					</div>
+				</div>
+			</div>
+		</div>
 		<div style="width:100%">
 			<div class="row">
 				<div class="col-sm-12">
@@ -47,6 +53,9 @@
 	</script>
 
 	<script id="member-template" type="text/x-handlebars-template">
+		<div style="padding-left:.2rem;text-align:right">
+			<input type="text" id="member-search" class="form-control" placeholder="Enter name" />
+		</div>
 		<ul class="list-group list-group-flush">
 			{{#each this.Members}}
 			<li class="list-group-item member-item active" data-id={{ID}} data-name="{{Name}}"><img src="{{Avatar}}" width="25" height="25" />&nbsp;&nbsp;&nbsp;{{Name}}</li>
@@ -54,138 +63,72 @@
 		</ul>
 	</script>
 
-	<script id="character-jobs-template" type="text/x-handlebars-template">
+	<script id="character-data-container-template" type="text/x-handlebars-template">
 		<div class="card" style="color: #000">
 			<div class="card-header bg-primary">
-				Jobs
+				{{DataType}}
 			</div>
 			<div class="card-body">
-				<div class="row">
-					{{#each this.ClassTypes}}
-					<div class="col-sm-3">
-						{{Name}}
-						<table>
-							{{#each Classes}}
-							<tr>
-								<td style="width: 2%;"><img src="{{Icon}}" width="25" height="25" title="{{Name}}" /></td>
-								<td style="width: 96%;">
-									<div style="margin-top: 5px;" class="progress">
-										<div class="progress-bar" role="progressbar" style="width: {{Width}}%" aria-valuenow="{{ExpLevel}}" aria-valuemin="0" aria-valuemax="{{ExpLevelMax}}"></div>
-									</div>
-								</td style="width: 2%;">
-								<td>{{Level}}</td>
-							</tr>
-							{{/each}}
-						</table>
+				<div class="row dynamic-data-section">
+					<div class="loading-container">
+						<div class="lds-ring">
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+						</div>
 					</div>
-					{{/each}}
 				</div>
 			</div>
 		</div>
+	</script>
+
+	<script id="character-jobs-template" type="text/x-handlebars-template">
+		{{#each this.ClassTypes}}
+		<div class="col-sm-3">
+			{{Name}}
+			<table>
+				{{#each Classes}}
+				<tr>
+					<td style="width: 2%;"><img src="{{Icon}}" width="25" height="25" title="{{Name}}" /></td>
+					<td style="width: 96%;">
+						<div style="margin-top: 5px;" class="progress">
+							<div class="progress-bar" role="progressbar" style="width: {{Width}}%" aria-valuenow="{{ExpLevel}}" aria-valuemin="0" aria-valuemax="{{ExpLevelMax}}"></div>
+						</div>
+					</td style="width: 2%;">
+					<td>{{Level}}</td>
+				</tr>
+				{{/each}}
+			</table>
+		</div>
+		{{/each}}
 	</script>
 
 	<script id="character-collectible-template" type="text/x-handlebars-template">
-		<div class="card" style="color: #000">
-			<div class="card-header bg-primary">
-				Collectibles
-			</div>
-			<div class="card-body">
-				<div class="row">
-					<div class="col-xl-6">
-						Mount <span style="float: right">{{OwnedMountCount}}/{{MountCount}}</span>
-						<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
-							{{#each this.Mounts}}
-							<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}">
-								<a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv+mount" style="text-decoration: none" target="_blank">
-									<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}}
-								</a>
-							</li>
-							{{/each}}
-						</ul>
-					</div>
-					<div class="col-xl-6">
-						Minion <span style="float: right">{{OwnedMinionCount}}/{{MinionCount}}</span>
-						<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
-							{{#each this.Minions}}
-							<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}">
-								<a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv" style="text-decoration: none" target="_blank">
-									<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}}
-								</a>
-							</li>
-							{{/each}}
-						</ul>
-					</div>
-				</div>
-			</div>
+		<div class="col-xl-6">
+			Mount <span style="float: right">{{OwnedMountCount}}/{{MountCount}}</span>
+			<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
+				{{#each this.Mounts}}
+				<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}">
+					<a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv+mount" style="text-decoration: none" target="_blank">
+						<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}}
+					</a>
+				</li>
+				{{/each}}
+			</ul>
 		</div>
-	</script>
-
-	<script id="character-info-template" type="text/x-handlebars-template">
-			<div class="row">
-				<div class="col-xl-2">
-					<table class="table table-striped">
-						<tr>
-							<td style="text-align: right">Race:</td>
-							<td>{{Race}}</td>
-						</tr>
-						<tr>
-							<td style="text-align: right">Gender:</td>
-							<td>{{Gender}}</td>
-						</tr>
-						<tr>
-							<td style="text-align: right">Tribe:</td>
-							<td>{{Tribe}}</td>
-						</tr>
-						<tr>
-							<td style="text-align: right">GC:</td>
-							<td>{{GrandCompany}}</td>
-						</tr>
-					</table>
-				</div>
-				<div class="col-xl-6">
-					<table class="table">
-						{{#each this.ClassJobs}}
-						<tr>
-							<td style="width: 2%;"><img src="{{Icon}}" width="25" height="25" title="{{Name}}" /></td>
-							<td style="width: 96%;">
-								<div style="margin-top: 5px;" class="progress">
-									<div class="progress-bar" role="progressbar" style="width: {{Width}}%" aria-valuenow="{{ExpLevel}}" aria-valuemin="0" aria-valuemax="{{ExpLevelMax}}">{{ExpLevel}}</div>
-								</div>
-							</td style="width: 2%;">
-							<td>{{Level}}</td>
-						</tr>
-						{{/each}}
-					</table>
-				</div>
-				<div class="col-xl-2">
-					<div class="col-xl-12 nopad">
-						<div class="card">
-							<div class="card-header">
-								Mounts <span style="float:right">{{MountCount}}</span>
-							</div>
-							<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
-								{{#each this.Mounts}}
-								<li class="list-group-item"><a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv+mount" style="color: white; text-decoration: none" target="_blank"><img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}} {{#if Owned}}&#10004;{{/if}}</a></li>
-								{{/each}}
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-xl-2">
-					<div class="col-xl-12 nopad">
-						<div class="card">
-							<div class="card-header">
-								Minions <span style="float:right">{{MinionCount}}</span>
-							</div>
-							<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
-								{{#each this.Minions}}
-								<li class="list-group-item"><a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv" style="color: white; text-decoration: none" target="_blank"><img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}} {{#if Owned}}&#10004;{{/if}}</a></li>
-								{{/each}}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div class="col-xl-6">
+			Minion <span style="float: right">{{OwnedMinionCount}}/{{MinionCount}}</span>
+			<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
+				{{#each this.Minions}}
+				<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}">
+					<a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv" style="text-decoration: none" target="_blank">
+						<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}}
+					</a>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
 	</script>
 </body>
 </html>

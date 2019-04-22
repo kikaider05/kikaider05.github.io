@@ -2,7 +2,8 @@ var navTemplate,
 	memberTemplate,
 	characterJobsTemplate,
 	characterCollectibleTemplate,
-	characterDataContainerTemplate
+	characterDataContainerTemplate,
+	noCharacterDataTemplate
 
 $(document).ready(function() {
 	var navTemplateSource = document.getElementById("nav-template").innerHTML;
@@ -10,12 +11,14 @@ $(document).ready(function() {
 	var characterJobsTemplateSource = document.getElementById("character-jobs-template").innerHTML;
 	var characterCollectibleTemplateSource = document.getElementById("character-collectible-template").innerHTML;
 	var characterDataContainerTemplateSource = document.getElementById("character-data-container-template").innerHTML;
+	var noCharacterDataTemplateSource = document.getElementById("no-character-data-template").innerHTML;
 	
 	navTemplate = Handlebars.compile(navTemplateSource);
 	memberTemplate = Handlebars.compile(memberTemplateSource);
 	characterJobsTemplate = Handlebars.compile(characterJobsTemplateSource);
 	characterCollectibleTemplate = Handlebars.compile(characterCollectibleTemplateSource);
 	characterDataContainerTemplate = Handlebars.compile(characterDataContainerTemplateSource);
+	noCharacterDataTemplate = Handlebars.compile(noCharacterDataTemplateSource);
 
 	if (sessionStorage.getItem("ffxiv_data") != null) {
 		ffxivData = JSON.parse(sessionStorage.getItem("ffxiv_data"));
@@ -59,7 +62,8 @@ function loadPage() {
 		$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"}));
 		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
 			if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
-				$(i.target).html(noCharacterInfoTemplate());
+				$("#jobs-section .dynamic-data-section").html(noCharacterDataTemplate({ DataType: "job" }));
+				$('#collectible-section .dynamic-data-section').html(noCharacterDataTemplate({ DataType: "collectible" }));
 			} else {
 				displayJobs(data);
 				displayMounts(data);

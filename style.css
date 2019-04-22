@@ -100,6 +100,16 @@ a[data-toggle="collapse"] {
     width:100%;
 }
 
+.no-data-alert-container {
+    width:100%;
+}
+
+.no-data-alert-container .alert {
+    margin: 0 auto;
+    text-align: center;
+    width: 33%;
+}
+
 /*Loading Icon*/
 .lds-ring {
     display: inline-block;

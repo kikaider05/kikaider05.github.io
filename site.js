@@ -66,7 +66,7 @@ function loadPage() {
 						{ Name: "Tank", Classes: jobs.Tank },
 						{ Name: "Damage", Classes: jobs.Damage }, 
 						{ Name: "Healer", Classes: jobs.Healer }, 
-						{ Name: "Hand", "Classes": jobs.Hand }]
+						{ Name: "Hand & Land", "Classes": jobs.Hand }]
 				}
 				$('#jobs-section').html(characterJobsTemplate(characterJobsTemplateData));
 

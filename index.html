@@ -37,6 +37,11 @@
 		<div style="width:100%">
 			<div class="row">
 				<div class="col-sm-12">
+					<div id="info-section"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
 					<div id="jobs-section"></div>
 				</div>
 			</div>
@@ -88,6 +93,12 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</script>
+
+	<script id="character-info-template" type="text/x-handlebars-template">
+		<div class="alert alert-info" role="alert">
+			<span class="bold">{{Name}}</span> is a <span class="bold">{{Gender}} {{Race}}</span> in the <span class="bold">{{GrandCompany}}</span> grand company.
 		</div>
 	</script>
 

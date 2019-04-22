@@ -2,6 +2,7 @@ var navTemplate,
 	memberTemplate,
 	characterJobsTemplate,
 	characterCollectibleTemplate,
+	characterInfoTemplate,
 	characterDataContainerTemplate,
 	noCharacterDataTemplate
 
@@ -10,6 +11,7 @@ $(document).ready(function() {
 	var memberTemplateSource = document.getElementById("member-template").innerHTML;
 	var characterJobsTemplateSource = document.getElementById("character-jobs-template").innerHTML;
 	var characterCollectibleTemplateSource = document.getElementById("character-collectible-template").innerHTML;
+	var characterInfoTemplateSource = document.getElementById("character-info-template").innerHTML;
 	var characterDataContainerTemplateSource = document.getElementById("character-data-container-template").innerHTML;
 	var noCharacterDataTemplateSource = document.getElementById("no-character-data-template").innerHTML;
 	
@@ -17,6 +19,7 @@ $(document).ready(function() {
 	memberTemplate = Handlebars.compile(memberTemplateSource);
 	characterJobsTemplate = Handlebars.compile(characterJobsTemplateSource);
 	characterCollectibleTemplate = Handlebars.compile(characterCollectibleTemplateSource);
+	characterInfoTemplate = Handlebars.compile(characterInfoTemplateSource);
 	characterDataContainerTemplate = Handlebars.compile(characterDataContainerTemplateSource);
 	noCharacterDataTemplate = Handlebars.compile(noCharacterDataTemplateSource);
 
@@ -30,9 +33,13 @@ $(document).ready(function() {
 		var loadMinions = new Promise((resolve, reject) => {
 			loadEnumeration("Companion", 1, resolve, reject);
 		});
+		var loadRaces = new Promise((resolve, reject) => {
+			loadEnumeration("Race", 1, resolve, reject);
+		});
 		Promise.all([
 			loadMounts,
-			loadMinions
+			loadMinions,
+			loadRaces
 		]).then(values => {
 			sessionStorage.setItem("ffxiv_data", JSON.stringify(ffxivData));
 			loadPage();
@@ -60,17 +67,29 @@ function loadPage() {
 		$('.intro-section').hide();
 		$('#jobs-section').html(characterDataContainerTemplate({ DataType: "Jobs"}));
 		$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"}));
-		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
+		$('#info-section').hide();
+		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.Name,Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
 			if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
 				$("#jobs-section .dynamic-data-section").html(noCharacterDataTemplate({ DataType: "job" }));
 				$('#collectible-section .dynamic-data-section').html(noCharacterDataTemplate({ DataType: "collectible" }));
 			} else {
+				displayCharacterInfo(data.Character);
 				displayJobs(data);
 				displayMounts(data);
 			}
 			window.scroll({top: 0, left: 0, behavior: 'smooth' });
 		});
 	});
+}
+
+function displayCharacterInfo(data) {
+	var characterInfoTemplateData = {
+		Name: data.Name,
+		Gender: gender[data.Gender],
+		Race: ffxivData["Race"][data.Race].Name,
+		GrandCompany: grandCompanies[data.GrandCompany.NameID]
+	};
+	$('#info-section').html(characterInfoTemplate(characterInfoTemplateData)).show();
 }
 
 function displayJobs(data) {
@@ -199,14 +218,6 @@ grandCompanies[3] = "Immortal Flames";
 var gender = {};
 gender[1] = "Male";
 gender[2] = "Female";
-
-var races = {};
-races[1] = "Hyur";
-races[2] = "Elezen";
-races[3] = "Lalafell";
-races[4] = "Miqo'te";
-races[5] = "Roegadyn";
-races[6] = "Au Ra";
 
 var tribes = {};
 tribes[1] = "Midlander";

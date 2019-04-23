@@ -84,6 +84,7 @@ function getEntryPoint() {
 }
 
 function loadPage() {
+	getEntryPoint();
 	$.get("https://xivapi.com/freecompany/9230971861226067551?data=FCM", function( data ) {
 		$('#nav-section').html(navTemplate(data.FreeCompany));
 		var memberTemplateData = {

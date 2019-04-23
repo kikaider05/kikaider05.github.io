@@ -64,11 +64,28 @@ a[data-toggle="collapse"] {
     border-color: #fff !important;
 }
 
+#nav-section {
+    width: 100%;
+}
+
 #jobs-section, #collectible-section, #info-section {
     margin-left: .3rem;
     margin-top: .3rem;
     width: 100%;
     color: white;
+}
+
+#party-selection-section {
+    margin-top: 1rem;
+}
+
+#party-selection-section .card {
+    border: 2px solid #2196F3;
+    text-align:center;
+}
+
+#party-selection-section .col-xl-3 {
+    padding-right: 0px;
 }
 
 #info-section .alert {
@@ -112,6 +129,12 @@ a[data-toggle="collapse"] {
     margin: 0 auto;
     text-align: center;
     width: 33%;
+}
+
+#party-assist-link {
+    text-decoration: underline;
+    float: right;
+    margin-right: 1rem;
 }
 
 .bold {

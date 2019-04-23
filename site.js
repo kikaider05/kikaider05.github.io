@@ -5,7 +5,8 @@ var navTemplate,
 	characterInfoTemplate,
 	characterDataContainerTemplate,
 	noCharacterDataTemplate,
-	urlParameters
+	urlParameters,
+	partySelectionTemplate
 
 $(document).ready(function() {
 	var navTemplateSource = document.getElementById("nav-template").innerHTML;
@@ -15,6 +16,7 @@ $(document).ready(function() {
 	var characterInfoTemplateSource = document.getElementById("character-info-template").innerHTML;
 	var characterDataContainerTemplateSource = document.getElementById("character-data-container-template").innerHTML;
 	var noCharacterDataTemplateSource = document.getElementById("no-character-data-template").innerHTML;
+	var partySelectionTemplateSource = document.getElementById("party-selection-template").innerHTML;
 	
 	navTemplate = Handlebars.compile(navTemplateSource);
 	memberTemplate = Handlebars.compile(memberTemplateSource);
@@ -23,6 +25,7 @@ $(document).ready(function() {
 	characterInfoTemplate = Handlebars.compile(characterInfoTemplateSource);
 	characterDataContainerTemplate = Handlebars.compile(characterDataContainerTemplateSource);
 	noCharacterDataTemplate = Handlebars.compile(noCharacterDataTemplateSource);
+	partySelectionTemplate = Handlebars.compile(partySelectionTemplateSource);
 	urlParameters = getUrlVars();
 
 	if (sessionStorage.getItem("ffxiv_data") != null) {
@@ -49,6 +52,11 @@ $(document).ready(function() {
 	}
 })
 
+$(document).on('click', '#party-assist-link', function (i, e) {
+	window.history.pushState(null, "Finale Fantasia", "?p=party");
+	displayPartyPage();
+});
+
 $(document).on('click', '#my-character-btn', function(i, e) {
 	Cookies.set('main_character', $(i.target).data("id"));
 	$(i.target).hide();
@@ -63,8 +71,13 @@ $(document).on('keyup', '#member-search', function() {
 });
 
 $(document).on('click', '.member-item', function (i, e) {
-	window.history.pushState(null, "Finale Fantasia", "?p=character&id=" + $(i.target).data("id"));
-	displayCharacterPage($(i.target).data("id"));
+	urlParameters = getUrlVars();
+	if (urlParameters["p"] && urlParameters["p"] == "party") {
+		addPartyMember($(i.target).data());
+	} else {
+		window.history.pushState(null, "Finale Fantasia", "?p=character&id=" + $(i.target).data("id"));
+		displayCharacterPage($(i.target).data("id"));
+	}
 });
 
 window.onpopstate = function(event) {
@@ -73,10 +86,11 @@ window.onpopstate = function(event) {
 };
 
 function getEntryPoint() {
-	if (urlParameters["id"]) {
+	if (urlParameters["p"] && urlParameters["p"] == "party") {
+		displayPartyPage();
+	} else if (urlParameters["id"]) {
 		displayCharacterPage(urlParameters["id"]);
-	}
-	else if (Cookies.get("main_character")) {
+	} else if (Cookies.get("main_character")) {
 		displayCharacterPage(Cookies.get("main_character"));
 	} else {
 		$('.intro-alert').show();
@@ -94,11 +108,26 @@ function loadPage() {
 	});
 }
 
+function displayPartyPage() {
+	$('.intro-section, #info-section, #jobs-section, #collectible-section').hide();
+	var partySelectionTemplateData = {
+		Members: ["", "", "", ""]
+	}
+	$('#party-selection-section').html(partySelectionTemplate(partySelectionTemplateData)).show();
+}
+
+function addPartyMember(data) {
+	var $availableCard = $('.empty-card:first');
+	$availableCard.removeClass('empty-card').find('.card-body').html(data.name).css('background-color', '#2196F3').css('color', 'white');
+	
+	console.log($('.empty-card'));
+}
+
 function displayCharacterPage(id) {
 	$('.intro-section').hide();
-	$('#jobs-section').html(characterDataContainerTemplate({ DataType: "Jobs"}));
-	$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"}));
-	$('#info-section').hide();
+	$('#jobs-section').html(characterDataContainerTemplate({ DataType: "Jobs"})).show();
+	$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"})).show();
+	$('#info-section, #party-selection-section, #party-info-section').hide();
 	$.get("https://xivapi.com/character/" + id + '?columns=Character.Name,Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
 		if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
 			$("#jobs-section .dynamic-data-section").html(noCharacterDataTemplate({ DataType: "job" }));

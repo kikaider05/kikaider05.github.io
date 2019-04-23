@@ -54,11 +54,23 @@
 					<div id="collectible-section"></div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="party-selection-section" style="display: none">
+
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="party-info-section"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 
 	<script id="nav-template" type="text/x-handlebars-template">
-		{{Name}} - {{ActiveMemberCount}} Members<span class="d-none d-lg-inline"> - {{Slogan}}</span>
+		{{Name}} - {{ActiveMemberCount}} Members<span class="d-none d-lg-inline"> - {{Slogan}}</span><span id="party-assist-link">Party Assist</span>
 	</script>
 
 	<script id="member-template" type="text/x-handlebars-template">
@@ -70,6 +82,20 @@
 			</li>
 			{{/each}}
 		</ul>
+	</script>
+
+	<script id="party-selection-template" type="text/x-handlebars-template">
+		<div class="row">
+			{{#each Members}}
+			<div class="col-xl-3 empty-card">
+				<div class="card">
+					<div class="card-body">
+						Select a member <i class="fas fa-user-plus"></i>
+					</div>
+				</div>
+			</div>
+			{{/each}}
+		</div>
 	</script>
 
 	<script id="no-character-data-template" type="text/x-handlebars-template">

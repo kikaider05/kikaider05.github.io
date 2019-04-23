@@ -67,7 +67,12 @@ $(document).on('click', '.member-item', function (i, e) {
 	displayCharacterPage($(i.target).data("id"));
 });
 
-function loadPage() {
+window.onpopstate = function(event) {
+	urlParameters = getUrlVars();
+	getEntryPoint();
+};
+
+function getEntryPoint() {
 	if (urlParameters["id"]) {
 		displayCharacterPage(urlParameters["id"]);
 	}
@@ -76,6 +81,9 @@ function loadPage() {
 	} else {
 		$('.intro-alert').show();
 	}
+}
+
+function loadPage() {
 	$.get("https://xivapi.com/freecompany/9230971861226067551?data=FCM", function( data ) {
 		$('#nav-section').html(navTemplate(data.FreeCompany));
 		var memberTemplateData = {

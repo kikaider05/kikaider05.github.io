@@ -13,7 +13,8 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 	<script src="site.js"></script>
 </head>
 
@@ -23,12 +24,15 @@
 	</div>	
 	<div class="wrapper">	
 		<nav id="sidebar">
+			<div style="padding-left:.2rem;text-align:right">
+				<input type="text" id="member-search" class="form-control" placeholder="Enter name" />
+			</div>
 			<div id="member-section"></div>
 		</nav>
 		<div style="width:100%" class="intro-section">
 			<div class="row">
 				<div class="col-xl-6 offset-xl-8">
-					<div class="alert alert-primary intro-alert" role="alert">
+					<div class="alert alert-primary intro-alert" role="alert" style="display: none">
 						Select a member on the left menu to begin!
 					</div>
 				</div>
@@ -58,12 +62,12 @@
 	</script>
 
 	<script id="member-template" type="text/x-handlebars-template">
-		<div style="padding-left:.2rem;text-align:right">
-			<input type="text" id="member-search" class="form-control" placeholder="Enter name" />
-		</div>
 		<ul class="list-group list-group-flush">
 			{{#each this.Members}}
-			<li class="list-group-item member-item active" data-id={{ID}} data-name="{{Name}}"><img src="{{Avatar}}" width="25" height="25" />&nbsp;&nbsp;&nbsp;{{Name}}</li>
+			<li class="list-group-item member-item active" data-id={{ID}} data-name="{{Name}}">
+				<img src="{{Avatar}}" width="25" height="25" />
+				&nbsp;&nbsp;&nbsp;{{Name}}
+			</li>
 			{{/each}}
 		</ul>
 	</script>
@@ -97,8 +101,15 @@
 	</script>
 
 	<script id="character-info-template" type="text/x-handlebars-template">
-		<div class="alert alert-info" role="alert">
-			<span class="bold">{{Name}}</span> is a <span class="bold">{{Gender}} {{Race}}</span> in the <span class="bold">{{GrandCompany}}</span> grand company.
+		<div class="alert alert-info" role="alert" style="overflow:auto;">
+			<span>
+				<span class="bold">{{Name}}</span> is a <span class="bold">{{Gender}} {{Race}}</span> in the <span class="bold">{{GrandCompany}}</span> grand company.
+			</span>
+			{{#if ShowButton}}
+			<span style="float:right">
+				<button type="button" id="my-character-btn" class="btn btn-primary btn-sm" data-id={{ID}}>This is me!</button>
+			</span>
+			{{/if}}
 		</div>
 	</script>
 

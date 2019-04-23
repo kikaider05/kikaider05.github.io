@@ -47,6 +47,11 @@ $(document).ready(function() {
 	}
 })
 
+$(document).on('click', '#my-character-btn', function(i, e) {
+	Cookies.set('main_character', { id: $(i.target).data("id") });
+	$(i.target).hide();
+});
+
 $(document).on('keyup', '#member-search', function() {
 	var $noMatches = $('#member-section').find('li').filter(function(i, key) {
 		return $(this).data('name').toLowerCase().indexOf($('#member-search').val().toLowerCase()) == -1;
@@ -56,6 +61,11 @@ $(document).on('keyup', '#member-search', function() {
 });
 
 function loadPage() {
+	if (Cookies.get("main_character")) {
+		displayCharacterPage(Cookies.get("main_character"));
+	} else {
+		$('.intro-alert').show();
+	}
 	$.get("https://xivapi.com/freecompany/9230971861226067551?data=FCM", function( data ) {
 		$('#nav-section').html(navTemplate(data.FreeCompany));
 		var memberTemplateData = {
@@ -64,30 +74,37 @@ function loadPage() {
 		$('#member-section').html(memberTemplate(memberTemplateData));
 	});
 	$('body').on('click', '.member-item', function (i, e) {
-		$('.intro-section').hide();
-		$('#jobs-section').html(characterDataContainerTemplate({ DataType: "Jobs"}));
-		$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"}));
-		$('#info-section').hide();
-		$.get("https://xivapi.com/character/" + $(i.target).data("id") + '?columns=Character.Name,Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
-			if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
-				$("#jobs-section .dynamic-data-section").html(noCharacterDataTemplate({ DataType: "job" }));
-				$('#collectible-section .dynamic-data-section').html(noCharacterDataTemplate({ DataType: "collectible" }));
-			} else {
-				displayCharacterInfo(data.Character);
-				displayJobs(data);
-				displayMounts(data);
-			}
-			window.scroll({top: 0, left: 0, behavior: 'smooth' });
-		});
+		displayCharacterPage($(i.target).data("id"));
 	});
 }
 
-function displayCharacterInfo(data) {
+function displayCharacterPage(id) {
+	$('.intro-section').hide();
+	$('#jobs-section').html(characterDataContainerTemplate({ DataType: "Jobs"}));
+	$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"}));
+	$('#info-section').hide();
+	$.get("https://xivapi.com/character/" + id + '?columns=Character.Name,Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
+		if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
+			$("#jobs-section .dynamic-data-section").html(noCharacterDataTemplate({ DataType: "job" }));
+			$('#collectible-section .dynamic-data-section').html(noCharacterDataTemplate({ DataType: "collectible" }));
+		} else {
+			displayCharacterInfo(data.Character, id);
+			displayJobs(data);
+			displayMounts(data);
+		}
+		window.scroll({top: 0, left: 0, behavior: 'smooth' });
+	});
+}
+
+function displayCharacterInfo(data, id) {
+	var mainCharacterID = Cookies.get("main_character");
 	var characterInfoTemplateData = {
+		ID: id,
 		Name: data.Name,
 		Gender: gender[data.Gender],
 		Race: ffxivData["Race"][data.Race].Name,
-		GrandCompany: grandCompanies[data.GrandCompany.NameID]
+		GrandCompany: grandCompanies[data.GrandCompany.NameID],
+		ShowButton: mainCharacterID && mainCharacterID == id.toString() ? true : false
 	};
 	$('#info-section').html(characterInfoTemplate(characterInfoTemplateData)).show();
 }

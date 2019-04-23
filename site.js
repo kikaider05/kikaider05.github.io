@@ -48,7 +48,7 @@ $(document).ready(function() {
 })
 
 $(document).on('click', '#my-character-btn', function(i, e) {
-	Cookies.set('main_character', { id: $(i.target).data("id") });
+	Cookies.set('main_character', $(i.target).data("id"));
 	$(i.target).hide();
 });
 

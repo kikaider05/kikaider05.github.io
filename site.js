@@ -4,7 +4,8 @@ var navTemplate,
 	characterCollectibleTemplate,
 	characterInfoTemplate,
 	characterDataContainerTemplate,
-	noCharacterDataTemplate
+	noCharacterDataTemplate,
+	urlParameters
 
 $(document).ready(function() {
 	var navTemplateSource = document.getElementById("nav-template").innerHTML;
@@ -22,6 +23,7 @@ $(document).ready(function() {
 	characterInfoTemplate = Handlebars.compile(characterInfoTemplateSource);
 	characterDataContainerTemplate = Handlebars.compile(characterDataContainerTemplateSource);
 	noCharacterDataTemplate = Handlebars.compile(noCharacterDataTemplateSource);
+	urlParameters = getUrlVars();
 
 	if (sessionStorage.getItem("ffxiv_data") != null) {
 		ffxivData = JSON.parse(sessionStorage.getItem("ffxiv_data"));
@@ -60,7 +62,15 @@ $(document).on('keyup', '#member-search', function() {
 	$('#member-section').find('li').not($noMatches).show();
 });
 
+$(document).on('click', '.member-item', function (i, e) {
+	window.history.pushState(null, "Finale Fantasia", "?p=character&id=" + $(i.target).data("id"));
+	displayCharacterPage($(i.target).data("id"));
+});
+
 function loadPage() {
+	if (urlParameters["id"]) {
+		displayCharacterPage(urlParameters["id"]);
+	}
 	if (Cookies.get("main_character")) {
 		displayCharacterPage(Cookies.get("main_character"));
 	} else {
@@ -72,9 +82,6 @@ function loadPage() {
 			"Members": data.FreeCompanyMembers.data
 		};
 		$('#member-section').html(memberTemplate(memberTemplateData));
-	});
-	$('body').on('click', '.member-item', function (i, e) {
-		displayCharacterPage($(i.target).data("id"));
 	});
 }
 
@@ -184,6 +191,15 @@ function loadEnumeration(enumerationType, page, resolve, reject) {
 			resolve();
 		}
 	});
+}
+
+//Helper functions
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
 }
 
 var ffxivData = {};

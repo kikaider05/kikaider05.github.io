@@ -104,7 +104,7 @@ function displayCharacterInfo(data, id) {
 		Gender: gender[data.Gender],
 		Race: ffxivData["Race"][data.Race].Name,
 		GrandCompany: grandCompanies[data.GrandCompany.NameID],
-		ShowButton: mainCharacterID && mainCharacterID == id.toString() ? true : false
+		ShowButton: mainCharacterID && mainCharacterID == id.toString() ? false : true
 	};
 	$('#info-section').html(characterInfoTemplate(characterInfoTemplateData)).show();
 }

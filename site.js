@@ -76,7 +76,7 @@ function getEntryPoint() {
 	if (urlParameters["id"]) {
 		displayCharacterPage(urlParameters["id"]);
 	}
-	if (Cookies.get("main_character")) {
+	else if (Cookies.get("main_character")) {
 		displayCharacterPage(Cookies.get("main_character"));
 	} else {
 		$('.intro-alert').show();

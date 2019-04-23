@@ -31,7 +31,7 @@
 		</nav>
 		<div style="width:100%" class="intro-section">
 			<div class="row">
-				<div class="col-xl-6 offset-xl-8">
+				<div class="col-lg-6 offset-lg-8 col-sm-12 offset-sm-3">
 					<div class="alert alert-primary intro-alert" role="alert" style="display: none">
 						Select a member on the left menu to begin!
 					</div>
@@ -58,7 +58,7 @@
 	</div>
 
 	<script id="nav-template" type="text/x-handlebars-template">
-		{{Name}} - {{ActiveMemberCount}} Members - {{Slogan}}
+		{{Name}} - {{ActiveMemberCount}} Members<span class="d-none d-lg-inline"> - {{Slogan}}</span>
 	</script>
 
 	<script id="member-template" type="text/x-handlebars-template">

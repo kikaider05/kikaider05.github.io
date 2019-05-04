@@ -6,7 +6,8 @@ var navTemplate,
 	characterDataContainerTemplate,
 	noCharacterDataTemplate,
 	urlParameters,
-	partySelectionTemplate
+	partySelectionTemplate,
+	alertTemplate
 
 $(document).ready(function() {
 	var navTemplateSource = document.getElementById("nav-template").innerHTML;
@@ -17,6 +18,7 @@ $(document).ready(function() {
 	var characterDataContainerTemplateSource = document.getElementById("character-data-container-template").innerHTML;
 	var noCharacterDataTemplateSource = document.getElementById("no-character-data-template").innerHTML;
 	var partySelectionTemplateSource = document.getElementById("party-selection-template").innerHTML;
+	var alertTemplateSource = document.getElementById("alert-template").innerHTML;
 	
 	navTemplate = Handlebars.compile(navTemplateSource);
 	memberTemplate = Handlebars.compile(memberTemplateSource);
@@ -26,6 +28,7 @@ $(document).ready(function() {
 	characterDataContainerTemplate = Handlebars.compile(characterDataContainerTemplateSource);
 	noCharacterDataTemplate = Handlebars.compile(noCharacterDataTemplateSource);
 	partySelectionTemplate = Handlebars.compile(partySelectionTemplateSource);
+	alertTemplate = Handlebars.compile(alertTemplateSource);
 	urlParameters = getUrlVars();
 
 	if (sessionStorage.getItem("ffxiv_data") != null) {
@@ -54,7 +57,12 @@ $(document).ready(function() {
 
 $(document).on('click', '#party-assist-link', function (i, e) {
 	window.history.pushState(null, "Finale Fantasia", "?p=party");
-	displayPartyPage();
+	getEntryPoint();
+});
+
+$(document).on('click', '#character-info-link', function (i, e) {
+	window.history.pushState(null, "Finale Fantasia", "?c=character");
+	getEntryPoint();
 });
 
 $(document).on('click', '#my-character-btn', function(i, e) {
@@ -92,6 +100,7 @@ $(document).on('click', '.member-item', function (i, e) {
 		addPartyMember($(i.target).data());
 	} else {
 		window.history.pushState(null, "Finale Fantasia", "?p=character&id=" + $(i.target).data("id"));
+		$('.content-section').hide();
 		displayCharacterPage($(i.target).data("id"));
 	}
 });
@@ -102,6 +111,8 @@ window.onpopstate = function(event) {
 };
 
 function getEntryPoint() {
+	urlParameters = getUrlVars();
+	$('.content-section').hide();
 	if (urlParameters["p"] && urlParameters["p"] == "party") {
 		displayPartyPage();
 	} else if (urlParameters["id"]) {
@@ -109,7 +120,7 @@ function getEntryPoint() {
 	} else if (Cookies.get("main_character")) {
 		displayCharacterPage(Cookies.get("main_character"));
 	} else {
-		$('.intro-alert').show();
+		$('#intro-section').html(alertTemplate({ Text: "Select a member on the left menu to begin!"})).show();
 	}
 }
 
@@ -125,7 +136,6 @@ function loadPage() {
 }
 
 function displayPartyPage() {
-	$('.intro-section, #info-section, #jobs-section, #collectible-section').hide();
 	var partySelectionTemplateData = {
 		Members: ["", "", "", ""]
 	}
@@ -140,10 +150,8 @@ function addPartyMember(data) {
 }
 
 function displayCharacterPage(id) {
-	$('.intro-section').hide();
 	$('#jobs-section').html(characterDataContainerTemplate({ DataType: "Jobs"})).show();
 	$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"})).show();
-	$('#info-section, #party-selection-section, #party-info-section').hide();
 	$.get("https://xivapi.com/character/" + id + '?columns=Character.Name,Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
 		if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
 			$("#jobs-section .dynamic-data-section").html(noCharacterDataTemplate({ DataType: "job" }));

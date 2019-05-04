@@ -29,48 +29,45 @@
 			</div>
 			<div id="member-section"></div>
 		</nav>
-		<div style="width:100%" class="intro-section">
-			<div class="row">
-				<div class="col-lg-6 offset-lg-8 col-sm-12 offset-sm-3">
-					<div class="alert alert-primary intro-alert" role="alert" style="display: none">
-						Select a member on the left menu to begin!
-					</div>
-				</div>
-			</div>
-		</div>
 		<div style="width:100%">
 			<div class="row">
-				<div class="col-sm-12">
-					<div id="info-section"></div>
+				<div class="col-sm-6 offset-sm-3">
+					<div class="content-section" id="intro-section"></div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-12">
-					<div id="jobs-section"></div>
+					<div class="content-section" id="info-section"></div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-12">
-					<div id="collectible-section"></div>
+					<div class="content-section" id="jobs-section"></div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-12">
-					<div id="party-selection-section" style="display: none">
-
-					</div>
+					<div class="content-section" id="collectible-section"></div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-12">
-					<div id="party-info-section"></div>
+					<div class="content-section" id="party-selection-section"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="content-section" id="party-info-section"></div>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<script id="nav-template" type="text/x-handlebars-template">
-		{{Name}} - {{ActiveMemberCount}} Members<span class="d-none d-lg-inline"> - {{Slogan}}</span><span id="party-assist-link">Party Assist</span>
+		{{Name}} - {{ActiveMemberCount}} Members
+		<span class="d-none d-lg-inline"> - {{Slogan}}</span>
+		<span class="header-nav-link" id="party-assist-link">Party Assist</span>
+		<span class="header-nav-link" id="character-info-link">Character Info</span>
 	</script>
 
 	<script id="member-template" type="text/x-handlebars-template">
@@ -186,6 +183,12 @@
 				</li>
 				{{/each}}
 			</ul>
+		</div>
+	</script>
+	
+	<script id="alert-template" type="text/x-handlebars-template">
+		<div class="alert alert-primary intro-alert" role="alert">
+			{{Text}}
 		</div>
 	</script>
 </body>

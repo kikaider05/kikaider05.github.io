@@ -131,10 +131,11 @@ a[data-toggle="collapse"] {
     width: 33%;
 }
 
-#party-assist-link {
+.header-nav-link {
     text-decoration: underline;
     float: right;
     margin-right: 1rem;
+    cursor: pointer;
 }
 
 .bold {

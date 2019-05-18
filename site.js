@@ -129,7 +129,7 @@ function loadPage() {
 	$.get("https://xivapi.com/freecompany/9230971861226067551?data=FCM", function( data ) {
 		$('#nav-section').html(navTemplate(data.FreeCompany));
 		var memberTemplateData = {
-			"Members": data.FreeCompanyMembers.data
+			"Members": data.FreeCompanyMembers
 		};
 		$('#member-section').html(memberTemplate(memberTemplateData));
 	});
@@ -143,6 +143,7 @@ function displayPartyPage() {
 }
 
 function addPartyMember(data) {
+	console.log(data);
 	var $availableCard = $('.empty-card:first');
 	$availableCard.removeClass('empty-card').find('.card-body').html(data.name).css('background-color', '#2196F3').css('color', 'white');
 	

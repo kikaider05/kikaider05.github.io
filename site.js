@@ -143,46 +143,43 @@ function displayPartyPage() {
 }
 
 function addPartyMember(data) {
-	console.log(data);
 	var $availableCard = $('.empty-card:first');
 	$availableCard.removeClass('empty-card').find('.card-body').html(data.name).css('background-color', '#2196F3').css('color', 'white');
-	
-	console.log($('.empty-card'));
 }
 
 function displayCharacterPage(id) {
 	$('#jobs-section').html(characterDataContainerTemplate({ DataType: "Jobs"})).show();
 	$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"})).show();
-	$.get("https://xivapi.com/character/" + id + '?columns=Character.Name,Character.ClassJobs,Character.Tribe,Character.Race,Character.GrandCompany.NameID,Character.Gender,Character.Minions,Character.Mounts,Info.Character.State', function(data) {
-		if (data.Info.Character.State == 1 || data.Info.Character.State == 0) {
+	$.get("https://xivapi.com/character/" + id + '?data=CJ,MIMO,FC', function(data) {
+		if (data.Character == null) {
 			$("#jobs-section .dynamic-data-section").html(noCharacterDataTemplate({ DataType: "job" }));
 			$('#collectible-section .dynamic-data-section').html(noCharacterDataTemplate({ DataType: "collectible" }));
 		} else {
 			displayCharacterInfo(data.Character, id);
-			displayJobs(data);
+			displayJobs(data.Character);
 			displayMounts(data);
 		}
 		window.scroll({top: 0, left: 0, behavior: 'smooth' });
 	});
 }
 
-function displayCharacterInfo(data, id) {
+function displayCharacterInfo(character, id) {
 	var mainCharacterID = Cookies.get("main_character");
 	var characterInfoTemplateData = {
 		ID: id,
-		Name: data.Name,
-		Gender: gender[data.Gender],
-		Race: ffxivData["Race"][data.Race].Name,
-		GrandCompany: grandCompanies[data.GrandCompany.NameID],
+		Name: character.Name,
+		Gender: gender[character.Gender],
+		Race: ffxivData["Race"][character.Race].Name,
+		GrandCompany: grandCompanies[character.GrandCompany.NameID],
 		ShowButton: mainCharacterID && mainCharacterID == id.toString() ? false : true
 	};
 	$('#info-section').html(characterInfoTemplate(characterInfoTemplateData)).show();
 }
 
-function displayJobs(data) {
+function displayJobs(character) {
 	var jobs = {"Damage": [], "Hand": [], "Tank": [], "Healer": []};
-	for (var classJob in data.Character.ClassJobs) {
-		var key = data.Character.ClassJobs[classJob];
+	for (var classJob in character.ClassJobs) {
+		var key = character.ClassJobs[classJob];
 		var currentClass = classes[key.JobID];
 		if (key.Level == 70) {
 			jobs[currentClass.Type].push({ "Icon": currentClass.Icon, "ExpLevel": "", "ExpLevelMax": 100, "Level": key.Level, "Name": currentClass.Name, "Width": 100 });
@@ -202,19 +199,19 @@ function displayJobs(data) {
 
 function displayMounts(data) {
 	characterCollectibleTemplateData = {
-		OwnedMountCount: data.Character.Mounts.length,
+		OwnedMountCount: data.Mounts.length,
 		MountCount: Object.keys(ffxivData["Mount"]).length,
 		Mounts: [],
-		OwnedMinionCount: data.Character.Minions.length,
+		OwnedMinionCount: data.Minions.length,
 		MinionCount: Object.keys(ffxivData["Companion"]).length,
 		Minions: []
 	}
 	var ownedMounts = {};
-	$.each(data.Character.Mounts, function(i, key) {
-		ownedMounts[key] = {};
-		var mount = ffxivData["Mount"][key];
+	$.each(data.Mounts, function(i, key) {
+		var mount = ffxivData["Mount"][key.Name.toLowerCase()];
+		ownedMounts[mount.ID] = {};
 		mount.Owned = true;
-		characterCollectibleTemplateData.Mounts.push(ffxivData["Mount"][key])
+		characterCollectibleTemplateData.Mounts.push(ffxivData["Mount"][key.Name.toLowerCase()])
 	});
 	$.each(ffxivData["Mount"], function (i, key) {
 		if (!(key.ID in ownedMounts)) {
@@ -223,11 +220,11 @@ function displayMounts(data) {
 		}
 	});
 	var ownedMinions = {};
-	$.each(data.Character.Minions, function(i, key) {
-		ownedMinions[key] = {};
-		var minion = ffxivData["Companion"][key];
+	$.each(data.Minions, function(i, key) {
+		var minion = ffxivData["Companion"][key.Name.toLowerCase()];
+		ownedMinions[minion.ID] = {};
 		minion.Owned = true;
-		characterCollectibleTemplateData.Minions.push(ffxivData["Companion"][key])
+		characterCollectibleTemplateData.Minions.push(ffxivData["Companion"][key.Name.toLowerCase()])
 	});
 	$.each(ffxivData["Companion"], function (i, key) {
 		if (!(key.ID in ownedMinions)) {
@@ -245,6 +242,7 @@ function loadEnumeration(enumerationType, page, resolve, reject) {
 	$.get("https://xivapi.com/" + enumerationType + "?page=" + page, function(data) {
 		$.each(data.Results, function(i, key) {
 			if (key.Name != "") {
+				ffxivData[enumerationType][key.Name.toLowerCase()] = key;
 				ffxivData[enumerationType][key.ID] = key;
 			}
 		});
@@ -305,6 +303,8 @@ classes[33] = { "ID": 33, "Icon": "https://xivapi.com/cj/1/astrologian.png", "Na
 classes[34] = { "ID": 34, "Icon": "https://xivapi.com/cj/1/samurai.png", "Name": "samurai", "Type": "Damage"}
 classes[35] = { "ID": 35, "Icon": "https://xivapi.com/cj/1/redmage.png", "Name": "red mage", "Type": "Damage"}
 classes[36] = { "ID": 36, "Icon": "https://xivapi.com/cj/1/bluemage.png", "Name": "blue mage", "Type": "Damage"}
+classes[37] = { "ID": 37, "Icon": "https://xivapi.com/cj/1/gunbreaker.png", "Name": "gun breaker", "Type": "Tank"}
+classes[38] = { "ID": 38, "Icon": "https://xivapi.com/cj/1/dancer.png", "Name": "dancer", "Type": "Damage"}
 
 var grandCompanies = {};
 grandCompanies[1] = "Maelstrom";

@@ -161,28 +161,30 @@
 		<div class="col-xl-6 mount-section">
 			Mount <span style="float: right">{{OwnedMountCount}}/{{MountCount}}</span>
 			<input type="text" id="mount-search" class="form-control" placeholder="Enter mount" />
-			<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
+			<div class="row" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
 				{{#each this.Mounts}}
-				<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}" data-name="{{Name}}">
+				<div class="collectible-item col-xl-3 border pt-1 {{#if Owned}}bg-success{{/if}} text-center" data-name="{{Name}}">
 					<a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv+mount" style="text-decoration: none" target="_blank">
-						<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}}
+						<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /><br/>
+						{{Name}}
 					</a>
-				</li>
+				</div>
 				{{/each}}
-			</ul>
+			</div>
 		</div>
 		<div class="col-xl-6 minion-section">
 			Minion <span style="float: right">{{OwnedMinionCount}}/{{MinionCount}}</span>
 			<input type="text" id="minion-search" class="form-control" placeholder="Enter minion" />
-			<ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
+			<div class="row" style="max-height: 600px; overflow-y: scroll; overflow-x: hidden">
 				{{#each this.Minions}}
-				<li class="collectible-item list-group-item {{#if Owned}}bg-success{{/if}}" data-name="{{Name}}">
+				<div class="collectible-item col-xl-3 border pt-1 {{#if Owned}}bg-success{{/if}} text-center" data-name="{{Name}}">
 					<a href="https://duckduckgo.com/?q=!ducky+{{Name}}+ffxiv" style="text-decoration: none" target="_blank">
-						<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /> {{Name}}
+						<img src="https://xivapi.com{{Icon}}" width="30" height="30" title="{{Name}}" onerror="this.style.display='none'" /><br/>
+						{{Name}}
 					</a>
-				</li>
+				</div>
 				{{/each}}
-			</ul>
+			</div>
 		</div>
 	</script>
 	

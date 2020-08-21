@@ -79,19 +79,19 @@ $(document).on('keyup', '#member-search', function() {
 });
 
 $(document).on('keyup', '#mount-search', function() {
-	var $noMatches = $('.mount-section').find('li').filter(function(i, key) {
+	var $noMatches = $('.mount-section').find('.collectible-item').filter(function(i, key) {
 		return $(this).data('name').toLowerCase().indexOf($('#mount-search').val().toLowerCase()) == -1;
 	});
 	$noMatches.hide();
-	$('.mount-section').find('li').not($noMatches).show();
+	$('.mount-section').find('.collectible-item').not($noMatches).show();
 });
 
 $(document).on('keyup', '#minion-search', function() {
-	var $noMatches = $('.minion-section').find('li').filter(function(i, key) {
+	var $noMatches = $('.minion-section').find('.collectible-item').filter(function(i, key) {
 		return $(this).data('name').toLowerCase().indexOf($('#minion-search').val().toLowerCase()) == -1;
 	});
 	$noMatches.hide();
-	$('.minion-section').find('li').not($noMatches).show();
+	$('.minion-section').find('.collectible-item').not($noMatches).show();
 });
 
 $(document).on('click', '.member-item', function (i, e) {

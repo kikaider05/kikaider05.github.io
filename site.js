@@ -150,7 +150,7 @@ function addPartyMember(data) {
 function displayCharacterPage(id) {
 	$('#jobs-section').html(characterDataContainerTemplate({ DataType: "Jobs"})).show();
 	$('#collectible-section').html(characterDataContainerTemplate({ DataType: "Collectibles"})).show();
-	$.get("https://xivapi.com/character/" + id + '?data=CJ,MIMO,FC', function(data) {
+	$.get("https://xivapi.com/character/" + id + '?data=CJ,MIMO', function(data) {
 		if (data.Character == null) {
 			$("#jobs-section .dynamic-data-section").html(noCharacterDataTemplate({ DataType: "job" }));
 			$('#collectible-section .dynamic-data-section').html(noCharacterDataTemplate({ DataType: "collectible" }));
